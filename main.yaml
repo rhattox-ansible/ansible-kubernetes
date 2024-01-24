@@ -1,0 +1,47 @@
+---
+- name: Install Kubernetes
+  hosts: localhost
+  become: yes
+
+  tasks:
+    - name: Install K8s APT Keys
+      block:
+        - name: Download GPG APT Key
+          ansible.builtin.get_url:
+            url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+            # Custom Path
+            dest: /etc/apt/keyrings/kubernetes.gpg
+
+        - name: Install GPG APT Key
+          ansible.builtin.apt_key:
+            file: /etc/apt/keyrings/kubernetes.gpg
+            state: present
+
+        - name: Add K8s to apt repository
+          ansible.builtin.apt_repository:
+            repo: "deb https://apt.kubernetes.io/ kubernetes-xenial main"
+            state: present
+
+    - name: Update APT package cache
+      apt:
+        update_cache: yes
+
+    - name: Install required packages
+      apt:
+        name:
+          - kubectl
+          - kubelet
+          - kubeadm
+        state: present
+
+    - name: Start kubelet service
+      service:
+        name: kubelet
+        state: started
+        enabled: yes
+ 
+    - name: Start containerd service
+      service:
+        name: containerd
+        state: started
+        enabled: yes

@@ -1,0 +1,23 @@
+---
+- name: Install Kubernetes Addons
+  hosts: localhost
+  become: yes
+
+  tasks:
+    - name: Install dependencies
+      apt:
+        name:
+          - curl
+        state: present
+
+    - name: Download kubectx
+      get_url:
+        url: https://github.com/ahmetb/kubectx/releases/download/v0.9.3/kubectx
+        dest: /usr/local/bin/kubectx
+        mode: "0755"
+
+    - name: Download kubens
+      get_url:
+        url: https://github.com/ahmetb/kubectx/releases/download/v0.9.3/kubens
+        dest: /usr/local/bin/kubens
+        mode: "0755"
