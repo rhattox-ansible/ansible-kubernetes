@@ -4,4 +4,9 @@
 
   tasks:
     - name: Install Flannel as the pod network add-on
-      shell: "kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml"
+      register: kubernetwork
+      changed_when: kubernetwork.rc != 0
+      ansible.builtin.shell: |
+        kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
+      args:
+        executable: /bin/bash

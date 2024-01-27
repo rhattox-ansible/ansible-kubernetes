@@ -1,41 +1,61 @@
 ---
 - name: Init Kubernetes
   hosts: localhost
-  become: yes
+  become: true
 
   tasks:
-    - name: get the username running the deploy
-      become: false
-      shell: "/bin/bash -c 'whoami'"
-      register: host_username
+    - name: Retrieve system environment
+      block:
+        - name: Get the username running the deploy
+          become: false
+          register: host_username
+          changed_when: host_username.rc != 0
+          ansible.builtin.command: whoami
 
-    - name: Display Command Output
-      debug:
-        var: host_username.stdout
+        - name: Display Command Output
+          ansible.builtin.debug:
+            var: host_username.stdout
 
     - name: Configure ContainerD
       block:
-        - name: Run the command and capture output
-          shell: "/bin/bash -c 'containerd config default > /etc/containerd/config.toml'"
+        - name: Generate ContainerD file
+          register: generate_containerd
+          changed_when: generate_containerd.rc != 0
+          ansible.builtin.shell: |
+            containerd config default > /etc/containerd/config.toml
+          args:
+            executable: /bin/bash
 
-        - name: Update containerD file
-          shell: "sed -i 's/            SystemdCgroup = false/            SystemdCgroup = true/' /etc/containerd/config.toml"
+        - name: Update ContainerD file
+          register: sed_containerd
+          changed_when: sed_containerd.rc != 0
+          ansible.builtin.shell: |
+            sed -i 's/            SystemdCgroup = false/            SystemdCgroup = true/' /etc/containerd/config.toml
+          args:
+            executable: /bin/bash
 
-        - name: Run the command and capture output
-          shell: "/bin/bash -c 'systemctl restart containerd'"
+        - name: Start containerd service
+          ansible.builtin.service:
+            name: containerd
+            state: restarted
+            enabled: true
 
     - name: Init K8s Kluster
       block:
-        - name: Initialize Kubernetes master
-          command: kubeadm init --pod-network-cidr=10.244.0.0/16
-          register: kubeadm_output
-          ignore_errors: yes
+        - name: Initialize Kubernetes
+          register: kubernetes_init
+          changed_when: kubernetes_init.rc != 0
+          ansible.builtin.shell: |
+            kubeadm init --pod-network-cidr=10.244.0.0/16
+          args:
+            executable: /bin/bash
+          ignore_errors: true
 
         - name: Copy kubeconfig to user's home directory
-          copy:
+          ansible.builtin.copy:
             src: "/etc/kubernetes/admin.conf"
             dest: "/home/{{ host_username.stdout }}/.kube/config"
-            remote_src: yes
+            remote_src: true
             owner: "{{ host_username.stdout }}"
             group: "{{ host_username.stdout }}"
             mode: "0644"
