@@ -40,7 +40,7 @@
 
         - name: Install APT repository
           ansible.builtin.apt_repository:
-            repo: "deb  https://apt.kubernetes.io/ kubernetes-xenial main"
+            repo: "deb https://apt.kubernetes.io/ kubernetes-xenial main"
             state: present
             filename: jenkins.list
 
