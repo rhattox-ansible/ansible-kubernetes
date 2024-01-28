@@ -3,6 +3,10 @@
   hosts: localhost
   become: true
 
+  vars:
+    k9s_version: "v0.31.7"
+    helm_version: "v3.8.0"
+    kubens_version: "v0.9.3"
   tasks:
     - name: Install dependencies
       ansible.builtin.apt:
@@ -14,13 +18,13 @@
       block:
         - name: Download kubectx
           ansible.builtin.get_url:
-            url: https://github.com/ahmetb/kubectx/releases/download/v0.9.3/kubectx
+            url: https://github.com/ahmetb/kubectx/releases/download/{{ kubens_version }}/kubectx
             dest: /usr/local/bin/kubectx
             mode: "0755"
 
         - name: Download kubens
           ansible.builtin.get_url:
-            url: https://github.com/ahmetb/kubectx/releases/download/v0.9.3/kubens
+            url: https://github.com/ahmetb/kubectx/releases/download/{{ kubens_version }}/kubens
             dest: /usr/local/bin/kubens
             mode: "0755"
 
@@ -34,7 +38,7 @@
 
         - name: Download Helm
           ansible.builtin.get_url:
-            url: "https://get.helm.sh/helm-v3.8.0-linux-amd64.tar.gz"
+            url: "https://get.helm.sh/helm-{{ helm_version }}-linux-amd64.tar.gz"
             dest: "/tmp/helm_temp/helm.tar.gz"
             mode: "0777"
 
@@ -61,7 +65,7 @@
       block:
         - name: Download K9s
           ansible.builtin.get_url:
-            url: "https://github.com/derailed/k9s/releases/download/v0.31.7/k9s_Linux_amd64.tar.gz"
+            url: "https://github.com/derailed/k9s/releases/download/{{ k9s_version }}/k9s_Linux_amd64.tar.gz"
             dest: "/tmp/k9s.tar.gz"
             mode: "0777"
 

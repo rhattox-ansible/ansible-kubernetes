@@ -42,7 +42,7 @@
           ansible.builtin.apt_repository:
             repo: "deb https://apt.kubernetes.io/ kubernetes-xenial main"
             state: present
-            filename: jenkins.list
+            filename: kubernetes.list
 
     - name: Update APT package cache
       ansible.builtin.apt:
@@ -51,9 +51,9 @@
     - name: Install required packages
       ansible.builtin.apt:
         name:
-          - kubectl
-          - kubelet
-          - kubeadm
+          - kubectl=1.28.2-00
+          - kubelet=1.28.2-00
+          - kubeadm=1.28.2-00
         state: present
 
     - name: Start kubelet service
