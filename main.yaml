@@ -1,69 +1,9 @@
----
-- name: Install Kubernetes
+- name: K8s Installation
   hosts: localhost
   become: true
+  gather_facts: true
 
-  vars:
-    tmp_key_location: /tmp/kubernetes.gpg
-    key_location: /usr/share/keyrings/kubernetes.gpg
-
-  tasks:
-    - name: Update APT package cache
-      ansible.builtin.apt:
-        update_cache: true
-
-    - name: Install K8s APT Keys
-      block:
-        - name: Download GPG APT Key
-          ansible.builtin.get_url:
-            url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
-            dest: "{{ tmp_key_location }}"
-            mode: "0444"
-
-        - name: Install GPG Key
-          register: apt_key
-          changed_when: apt_key.rc != 0
-          ansible.builtin.shell: |
-            cat {{ tmp_key_location }} | gpg --batch --yes --dearmor --quiet -o {{ key_location }}
-          args:
-            executable: /bin/bash
-
-        - name: Update file permission
-          ansible.builtin.file:
-            path: "{{ key_location }}"
-            mode: "0444"
-
-        - name: Remove tmp file
-          ansible.builtin.file:
-            path: "{{ tmp_key_location }}"
-            state: absent
-
-        - name: Install APT repository
-          ansible.builtin.apt_repository:
-            repo: "deb https://apt.kubernetes.io/ kubernetes-xenial main"
-            state: present
-            filename: kubernetes.list
-
-    - name: Update APT package cache
-      ansible.builtin.apt:
-        update_cache: true
-
-    - name: Install required packages
-      ansible.builtin.apt:
-        name:
-          - kubectl=1.28.2-00
-          - kubelet=1.28.2-00
-          - kubeadm=1.28.2-00
-        state: present
-
-    - name: Start kubelet service
-      ansible.builtin.service:
-        name: kubelet
-        state: started
-        enabled: true
-
-    - name: Start containerd service
-      ansible.builtin.service:
-        name: containerd
-        state: started
-        enabled: true
+  roles:
+    - k8s
+    - configs
+    - addons

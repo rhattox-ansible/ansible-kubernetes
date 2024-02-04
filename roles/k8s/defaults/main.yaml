@@ -1,0 +1,5 @@
+tmp_key_location: /tmp/kubernetes.gpg
+key_location: /usr/share/keyrings/kubernetes.gpg
+google_apt_url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+google_repo: "deb [signed-by={{ key_location }}] https://apt.kubernetes.io/ kubernetes-xenial main"
+k8s_version: 1.28.2-00
