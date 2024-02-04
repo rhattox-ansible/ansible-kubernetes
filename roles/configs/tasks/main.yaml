@@ -33,6 +33,14 @@
         executable: /bin/bash
       ignore_errors: true
 
+    - name: Create
+      ansible.builtin.file:
+        path: "/home/{{ ansible_env.SUDO_USER }}/.kube/"
+        state: directory
+        owner: "{{ ansible_env.SUDO_USER }}"
+        group: "{{ ansible_env.SUDO_USER }}"
+        mode: "0755"
+
     - name: Copy kubeconfig to user's home directory
       ansible.builtin.copy:
         src: "/etc/kubernetes/admin.conf"
@@ -40,7 +48,7 @@
         remote_src: true
         owner: "{{ ansible_env.SUDO_USER }}"
         group: "{{ ansible_env.SUDO_USER }}"
-        mode: "0644"
+        mode: "0755"
 
     - name: Install Flannel as the pod network add-on
       register: kubernetwork
