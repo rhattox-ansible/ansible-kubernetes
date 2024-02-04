@@ -22,6 +22,24 @@
         state: restarted
         enabled: true
 
+- name: Fix swap
+  block:
+    - name: Disable swap for current session
+      register: disable_swap
+      changed_when: disable_swap.rc != 0
+      ansible.builtin.shell: |
+        swapoff -a
+      args:
+        executable: /bin/bash
+      ignore_errors: true
+
+    - name: Disable swap permanently, persist reboots
+      replace:
+        path: /etc/fstab
+        regexp: '^(\s*)([^#\n]+\s+)(\w+\s+)swap(\s+.*)$'
+        replace: '#\1\2\3swap\4'
+        backup: true
+
 - name: Init K8s Kluster
   block:
     - name: Initialize Kubernetes
