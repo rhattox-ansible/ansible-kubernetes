@@ -41,9 +41,9 @@
 - name: Install required packages
   ansible.builtin.apt:
     name:
-      - kubectl={{ k8s_version }}
-      - kubelet={{ k8s_version }}
-      - kubeadm={{ k8s_version }}
+      - kubectl
+      - kubelet
+      - kubeadm
     state: present
 
 - name: Start kubelet service
