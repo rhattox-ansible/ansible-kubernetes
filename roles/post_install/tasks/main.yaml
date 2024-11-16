@@ -1,0 +1,11 @@
+- name: Install Apt Packages
+  ansible.builtin.include_tasks: apt_packages.yaml
+
+- name: Install KubeCTX and KubeNS
+  ansible.builtin.include_tasks: install_ns_ctx.yaml
+
+- name: Install Helm
+  ansible.builtin.include_tasks: install_helm.yaml
+
+- name: Install K9s
+  ansible.builtin.include_tasks: install_k9s.yaml

@@ -1,0 +1,36 @@
+- name: Init K8s Kluster
+  block:
+    - name: Initialize Kubernetes
+      register: kubernetes_init
+      changed_when: kubernetes_init.rc != 0
+      ansible.builtin.shell: |
+        kubeadm init --pod-network-cidr={{ k8s_pod_cidr }}
+      args:
+        executable: /bin/bash
+      ignore_errors: true
+
+    - name: Create .kube Dir
+      ansible.builtin.file:
+        path: "/home/{{ ansible_env.SUDO_USER }}/.kube/"
+        state: directory
+        owner: "{{ ansible_env.SUDO_USER }}"
+        group: "{{ ansible_env.SUDO_USER }}"
+        mode: "0750"
+
+    - name: Copy kubeconfig to user's home directory
+      ansible.builtin.copy:
+        src: "{{ kube_config_default_path }}"
+        dest: "{{ user_config_default_path }}"
+        remote_src: true
+        owner: "{{ ansible_env.SUDO_USER }}"
+        group: "{{ ansible_env.SUDO_USER }}"
+        mode: "0750"
+
+    - name: Install Flannel as the pod network add-on
+      register: kubernetwork
+      become: false
+      changed_when: kubernetwork.rc != 0
+      ansible.builtin.shell: |
+        kubectl apply -f {{ k8s_flannel_url }}
+      args:
+        executable: /bin/bash

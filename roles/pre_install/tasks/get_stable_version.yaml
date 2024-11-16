@@ -1,0 +1,15 @@
+- name: Use Stable Version
+  block:
+    - name: Fetch stable release version from URL
+      ansible.builtin.uri:
+        url: "{{ kubernetes_stable_version_url }}"
+        return_content: true
+      register: kubernetes_stable_version
+
+    - name: Set Ansible variable from URL content
+      ansible.builtin.set_fact:
+        kubernetes_stable_version_var: "{{ kubernetes_stable_version.content | regex_replace('\\.\\d+$', '') | trim }}"
+
+    - name: Print the stable version
+      ansible.builtin.debug:
+        msg: "The stable release is: {{ kubernetes_stable_version_var }}"

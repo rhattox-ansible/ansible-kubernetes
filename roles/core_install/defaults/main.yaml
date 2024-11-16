@@ -1,0 +1,12 @@
+k8s_pod_cidr: 10.244.0.0/16
+k8s_flannel_url: https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
+
+apt_packages: |
+  - kubectl
+  - kubelet
+  - kubeadm
+
+kube_config_default_path: "/etc/kubernetes/admin.conf"
+user_config_default_path: "/home/{{ ansible_env.SUDO_USER }}/.kube/config"
+
+containerd_file_path: "/etc/containerd/config.toml"

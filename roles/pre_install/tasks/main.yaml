@@ -1,0 +1,11 @@
+- name: Configure Swap
+  ansible.builtin.include_tasks: configure_swap.yaml
+
+- name: Get Stable Version
+  ansible.builtin.include_tasks: get_stable_version.yaml
+
+- name: Install Basic APT Packages
+  ansible.builtin.include_tasks: install_basic_apt_packages.yaml
+
+- name: Install GPG Key
+  ansible.builtin.include_tasks: install_gpg_key.yaml

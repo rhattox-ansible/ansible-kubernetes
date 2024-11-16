@@ -1,6 +1,0 @@
-tmp_key_location: /tmp/kubernetes.gpg
-key_location: /usr/share/keyrings/kubernetes.gpg
-google_apt_url: https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key 
-google_repo: "deb [signed-by={{ key_location }}] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /"
-
-
