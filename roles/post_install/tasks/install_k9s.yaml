@@ -1,0 +1,26 @@
+- name: Install K9s
+  block:
+    - name: Download K9s
+      ansible.builtin.get_url:
+        url: "{{ k9s_url }}"
+        dest: "/tmp/k9s.tar.gz"
+        mode: "0777"
+
+    - name: Extract K9s
+      ansible.builtin.unarchive:
+        src: "/tmp/k9s.tar.gz"
+        dest: "/usr/local/bin/"
+        remote_src: true
+        creates: "{{ install_path }}/k9s"
+
+    - name: Set executable permissions
+      ansible.builtin.file:
+        dest: "{{ install_path }}/k9s"
+        owner: "{{ ansible_env.SUDO_USER }}"
+        group: "{{ ansible_env.SUDO_USER }}"
+        mode: "0550"
+
+    - name: Clean up temporary files
+      ansible.builtin.file:
+        path: "/tmp/k9s.tar.gz"
+        state: absent

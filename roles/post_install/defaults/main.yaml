@@ -1,0 +1,10 @@
+apt_packages: |
+  - curl
+
+kubens_version: "v0.9.5"
+kubectx_url: "https://github.com/ahmetb/kubectx/releases/download/{{ kubens_version }}"
+install_path: /usr/local/bin
+helm_version: "v3.16.3"
+helm_url: "https://get.helm.sh/helm-{{ helm_version }}-linux-amd64.tar.gz"
+k9s_version: "v0.32.6"
+k9s_url: https://github.com/derailed/k9s/releases/download/{{ k9s_version }}/k9s_Linux_amd64.tar.gz

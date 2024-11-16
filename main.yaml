@@ -3,7 +3,6 @@
   become: true
   gather_facts: true
   roles:
-    - kubernetes
-    # - k8s
-    # - configs
-    # - addons
+    - pre_install
+    - core_install
+    - post_install

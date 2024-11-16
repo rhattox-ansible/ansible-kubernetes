@@ -1,0 +1,42 @@
+- name: Configure ContainerD
+  block:
+    - name: "Check Existing file: {{ containerd_file_path }}"
+      block:
+        - name: "Verify File"
+          ansible.builtin.stat:
+            path: "{{ containerd_file_path }}"
+          register: file_check
+
+        - name: "Remove File"
+          when: file_check.stat.exists
+          ansible.builtin.file:
+            path: "{{ containerd_file_path }}"
+            state: absent
+
+    - name: "Verify File"
+      ansible.builtin.stat:
+        path: "{{ containerd_file_path }}"
+      register: file_check
+
+    - name: Generate ContainerD file
+      register: generate_containerd
+      changed_when: generate_containerd.rc != 0
+      ansible.builtin.shell: |
+        containerd config default > /etc/containerd/config.toml
+      args:
+        executable: /bin/bash
+
+    - name: Update ContainerD file
+      ansible.builtin.lineinfile:
+        path: "{{ containerd_file_path }}"
+        regexp: '^(\s*)SystemdCgroup = false'
+        line: 'SystemdCgroup = true'
+        backup: true
+      register: lineinfile_result
+      changed_when: lineinfile_result.changed
+
+    - name: Start containerd service
+      ansible.builtin.service:
+        name: containerd
+        state: restarted
+        enabled: true

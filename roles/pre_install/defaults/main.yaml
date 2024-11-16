@@ -1,0 +1,18 @@
+app_name: kubernetes
+
+kubernetes_stable_version_url: "https://cdn.dl.k8s.io/release/stable.txt"
+
+apt_packages: |
+  - apt-transport-https
+  - ca-certificates
+  - curl
+  - gnupg
+  - lsb-release
+
+tmp_key_location: /tmp/{{ app_name }}.gpg
+key_location: /usr/share/keyrings/{{ app_name }}.gpg
+
+# It gets the version from tasks/get_stable_version.yaml
+kubernetes_url: "https://pkgs.k8s.io/core:/stable:/{{ kubernetes_stable_version_var }}/deb"
+gpg_key_url: "{{ kubernetes_url }}/Release.key"
+apt_url: "deb [signed-by={{ key_location }}] {{ kubernetes_url }}/ /"
