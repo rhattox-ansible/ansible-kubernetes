@@ -2,8 +2,8 @@
   hosts: localhost
   become: true
   gather_facts: true
-
   roles:
-    - k8s
-    - configs
-    - addons
+    - kubernetes
+    # - k8s
+    # - configs
+    # - addons

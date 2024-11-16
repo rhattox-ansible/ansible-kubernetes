@@ -1,0 +1,70 @@
+- name: Update Packages And Add Required Packages
+  block:
+  - name: Update APT package cache
+    ansible.builtin.apt:
+      update_cache: true
+
+  - name: Install Prerequisites
+    ansible.builtin.apt:
+      name: "{{ prerequisite_packages | from_yaml }}"
+      state: present
+
+- name: Update APT package cache
+  ansible.builtin.apt:
+    update_cache: true
+
+- name: Install K8s APT Keys
+  block:
+  - name: Download GPG APT Key
+    ansible.builtin.get_url:
+      url: "{{ google_apt_url }}"
+      dest: "{{ tmp_key_location }}"
+      mode: "755"
+
+  - name: Install GPG Key
+    register: apt_key
+    changed_when: apt_key.rc != 0
+    ansible.builtin.shell: |
+      cat {{ tmp_key_location }} | gpg --batch --yes --dearmor --quiet -o {{ key_location }}
+    args:
+      executable: /bin/bash
+
+  - name: Update file permission
+    ansible.builtin.file:
+      path: "{{ key_location }}"
+      mode: "755"
+
+  - name: Remove tmp file
+    ansible.builtin.file:
+      path: "{{ tmp_key_location }}"
+      state: absent
+
+  - name: Install APT repository
+    ansible.builtin.apt_repository:
+      repo: "{{ google_repo }}"
+      state: present
+      filename: kubernetes.list
+
+- name: Update APT package cache
+  ansible.builtin.apt:
+    update_cache: true
+
+- name: Install required packages
+  ansible.builtin.apt:
+    name:
+    - kubectl
+    - kubelet
+    - kubeadm
+    state: present
+
+- name: Start kubelet service
+  ansible.builtin.service:
+    name: kubelet
+    state: started
+    enabled: true
+
+- name: Start containerd service
+  ansible.builtin.service:
+    name: containerd
+    state: started
+    enabled: true
