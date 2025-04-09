@@ -9,3 +9,9 @@
 
 - name: Install K9s
   ansible.builtin.include_tasks: install_k9s.yaml
+
+- name: Update Node Taint
+  ansible.builtin.include_tasks: install_nodes.yaml
+
+- name: Install GHA Runners
+  ansible.builtin.include_tasks: install_gha_runners.yaml
