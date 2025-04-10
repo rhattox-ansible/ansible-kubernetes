@@ -4,3 +4,11 @@
   register: taint_result
   changed_when: "'node-role.kubernetes.io/control-plane-' in taint_result.stdout or taint_result.stderr"
   failed_when: taint_result.rc != 0
+
+- name: Apply mode probe
+  ansible.builtin.shell: |
+    sudo modprobe br_netfilter
+  register: modprobe
+  failed_when: modprobe.rc != 0
+
+
