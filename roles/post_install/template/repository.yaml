@@ -1,9 +1,12 @@
 apiVersion: actions.summerwind.dev/v1alpha1
 kind: RunnerDeployment
 metadata:
-  name: example-runnerdeploy
+  name: rhattox-javascript-praiaCarioca
 spec:
   replicas: 1
   template:
-    spec:
-      repository: rhattox/praiaCarioca
+   spec:
+     # https://github.com/actions/actions-runner-controller/blob/master/docs/deploying-alternative-runners.md
+      image: summerwind/actions-runner-dind
+      dockerdWithinRunnerContainer: true
+      repository: rhattox-javascript/praiaCarioca
