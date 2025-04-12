@@ -1,7 +1,7 @@
 apiVersion: actions.summerwind.dev/v1alpha1
 kind: RunnerDeployment
 metadata:
-  name: rhattox-javascript-praiaCarioca
+  name: praiacarioca
 spec:
   replicas: 1
   template:
@@ -10,3 +10,7 @@ spec:
       image: summerwind/actions-runner-dind
       dockerdWithinRunnerContainer: true
       repository: rhattox-javascript/praiaCarioca
+      dockerMTU: 1450
+      env:
+        - name: ARC_DOCKER_MTU_PROPAGATION
+          value: "true"

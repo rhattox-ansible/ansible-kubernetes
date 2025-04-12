@@ -17,6 +17,7 @@
     helm upgrade --install --namespace actions-runner-system --create-namespace \
       --set=authSecret.create=true \
       --set=authSecret.github_token="{{ github_token }}" \
+      -f template/values.yaml \
       --wait actions-runner-controller actions-runner-controller/actions-runner-controller
   register: helm_install_result
   changed_when: "'deployed' in helm_install_result.stdout or 'upgraded' in helm_install_result.stdout"
