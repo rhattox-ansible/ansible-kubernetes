@@ -1,6 +1,6 @@
 configs:
   secret:
-    argocdServerAdminPassword: "$2a$12$WqD1ZzHK6wXLKn3TSC99z.L7Zxq1PSSsg7ZJPrhK52uH2DL9B0MKi" # password: mysecret123
+    argocdServerAdminPassword: "$2y$10$IsjzEJkHKt9AoUHfmzp/9uae34AUXR/YAxyyc7Kk8StWJmZa3U6US" # admin
 
 server:
   service:
