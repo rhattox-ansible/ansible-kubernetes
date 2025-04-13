@@ -5,8 +5,8 @@ configs:
 server:
   service:
     type: NodePort
-    nodePortHttp: 32080
-    nodePortHttps: 32443
+    nodePortHttp: 30000
+    nodePortHttps: 30001
     ports:
       http: 80
       https: 443
