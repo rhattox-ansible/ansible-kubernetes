@@ -4,14 +4,13 @@
   register: taint_result
   changed_when: "'node-role.kubernetes.io/control-plane-' in taint_result.stdout or taint_result.stderr"
   failed_when: taint_result.rc != 0
+  ignore_errors: true
 
-- name: Ensure br_netfilter module is loaded and sysctl is configured
-  become: true
-  tasks:
-    - name: Load br_netfilter kernel module
-      ansible.builtin.modprobe:
-        name: br_netfilter
-        state: present
+
+- name: Load br_netfilter kernel module
+  ansible.builtin.modprobe:
+    name: br_netfilter
+    state: present
 
 - name: Ensure br_netfilter module is loaded on boot
   ansible.builtin.copy:

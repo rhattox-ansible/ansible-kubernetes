@@ -1,0 +1,12 @@
+configs:
+  secret:
+    argocdServerAdminPassword: "$2a$12$WqD1ZzHK6wXLKn3TSC99z.L7Zxq1PSSsg7ZJPrhK52uH2DL9B0MKi" # password: mysecret123
+
+server:
+  service:
+    type: NodePort
+    nodePortHttp: 32080
+    nodePortHttps: 32443
+    ports:
+      http: 80
+      https: 443
