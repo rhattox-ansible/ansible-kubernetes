@@ -1,6 +1,9 @@
 configs:
   secret:
-    argocdServerAdminPassword: "$2y$10$IsjzEJkHKt9AoUHfmzp/9uae34AUXR/YAxyyc7Kk8StWJmZa3U6US" # admin
+    argocdServerAdminPassword: "$2a$10$sjU6Yoii/IOaVsRdJXBq9e3Kgfjd9UcyTK/G3AhuXW5PmPn0xKTHy" # admin
+
+controller:
+  clusterAdminAccess: true
 
 server:
   service:
@@ -10,7 +13,3 @@ server:
     ports:
       http: 80
       https: 443
-
-configs:
-  cm:
-    exec.enabled: "true"
