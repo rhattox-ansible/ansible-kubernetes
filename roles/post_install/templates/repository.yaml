@@ -1,16 +1,25 @@
-apiVersion: actions.summerwind.dev/v1alpha1
-kind: RunnerDeployment
+apiVersion: v1
+kind: PersistentVolume
 metadata:
-  name: praiacarioca
+  name: dind-cache-pv
 spec:
-  replicas: 1
-  template:
-   spec:
-     # https://github.com/actions/actions-runner-controller/blob/master/docs/deploying-alternative-runners.md
-      image: summerwind/actions-runner-dind
-      dockerdWithinRunnerContainer: true
-      repository: rhattox-javascript/praiaCarioca
-      dockerMTU: 1450
-      env:
-        - name: ARC_DOCKER_MTU_PROPAGATION
-          value: "true"
+  capacity:
+    storage: 50Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath: # only works on single-node setups (use NFS, EBS, etc. for multi-node)
+    path: /mnt/data/dind-cache
+  persistentVolumeReclaimPolicy: Retain
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: dind-cache-pvc
+  namespace: actions-runner
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 50Gi
+  volumeName: dind-cache-pv # bind to the specific PV above
