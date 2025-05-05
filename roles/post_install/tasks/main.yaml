@@ -15,6 +15,3 @@
 
 - name: Install GHA Runners
   ansible.builtin.include_tasks: install_gha_runners.yaml
-
-- name: Install ArgoCD 
-  ansible.builtin.include_tasks: install_argocd.yaml
