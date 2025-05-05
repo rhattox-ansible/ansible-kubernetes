@@ -3,6 +3,6 @@
   become: true
   gather_facts: true
   roles:
-    # - pre_install
-    # - core_install
+    - pre_install
+    - core_install
     - post_install
