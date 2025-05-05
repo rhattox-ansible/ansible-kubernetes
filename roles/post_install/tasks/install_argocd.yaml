@@ -1,6 +1,0 @@
-- name: Add argocd helm repo
-  ansible.builtin.shell: |
-    helm repo add argo https://argoproj.github.io/argo-helm
-    kubectl create namespace argocd
-    helm install argocd argo/argo-cd -n argocd -f {{ role_path }}/templates/argocd-values.yaml
-  ignore_errors: true
