@@ -37,8 +37,8 @@ Install these dependencies before running this playbook.
 
 The playbook is organized into roles:
 
-- **pre_install**: Prepares the system, installs basic packages, configures containerd, manages GPG keys, and sets up repositories.
-- **core_install**: Installs Kubernetes components, initializes the cluster, and configures networking.
+- **pre-setup**: Prepares the system, installs basic packages, configures containerd, manages GPG keys, and sets up repositories.
+- **setup**: Installs Kubernetes components, initializes the cluster, and configures networking.
 
 ## Example Usage
 
