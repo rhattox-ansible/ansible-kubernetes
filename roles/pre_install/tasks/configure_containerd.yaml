@@ -1,24 +1,24 @@
-- name: Configure ContainerD
+- name: Configure ContainerD with SystemdCgroup Support
   block:
-    - name: "Check Existing file: {{ containerd_file_path }}"
+    - name: "Check and prepare ContainerD configuration file"
       block:
-        - name: "Verify File"
+        - name: "Check if ContainerD config file exists"
           ansible.builtin.stat:
             path: "{{ containerd_file_path }}"
           register: file_check
 
-        - name: "Remove File"
+        - name: "Remove existing ContainerD config file if present"
           when: file_check.stat.exists
           ansible.builtin.file:
             path: "{{ containerd_file_path }}"
             state: absent
 
-    - name: "Verify File"
+    - name: "Verify ContainerD config file status"
       ansible.builtin.stat:
         path: "{{ containerd_file_path }}"
       register: file_check
 
-    - name: Create /etc/containerd Dir
+    - name: Create ContainerD configuration directory
       ansible.builtin.file:
         path: "/etc/containerd"
         state: directory
@@ -26,7 +26,7 @@
         group: "{{ ansible_env.SUDO_USER }}"
         mode: "0750"
 
-    - name: Generate ContainerD file
+    - name: Generate default ContainerD configuration file
       register: generate_containerd
       changed_when: generate_containerd.rc != 0
       ansible.builtin.shell: |
@@ -34,7 +34,7 @@
       args:
         executable: /bin/bash
 
-    - name: Update ContainerD file
+    - name: Enable SystemdCgroup in ContainerD configuration
       ansible.builtin.lineinfile:
         path: "{{ containerd_file_path }}"
         regexp: '^(\s*)SystemdCgroup = false'
@@ -43,7 +43,7 @@
       register: lineinfile_result
       changed_when: lineinfile_result.changed
 
-    - name: Start containerd service
+    - name: Restart and enable ContainerD service
       ansible.builtin.service:
         name: containerd
         state: restarted
