@@ -7,7 +7,7 @@
 - name: Install GPG Key
   ansible.builtin.include_tasks: install_gpg_key.yaml
 
-- name: Install KubeCTX, KubeNS and Helm
+- name: Install KubeCTX, KubeNS, Helm, nerdCTL
   ansible.builtin.include_tasks: install_bundle.yaml
 
 - name: Configure LocalHost
