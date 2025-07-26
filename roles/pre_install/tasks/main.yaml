@@ -10,5 +10,5 @@
 - name: Install KubeCTX, KubeNS and Helm
   ansible.builtin.include_tasks: install_bundle.yaml
 
-- name: Configure System Network
-  ansible.builtin.include_tasks: configure_system_network.yaml
+- name: Configure LocalHost
+  ansible.builtin.include_tasks: configure_localhost.yaml
