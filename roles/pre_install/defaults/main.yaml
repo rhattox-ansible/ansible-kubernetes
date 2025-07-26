@@ -1,13 +1,14 @@
 app_name: kubernetes
 
-kubernetes_stable_version_url: "https://cdn.dl.k8s.io/release/stable.txt"
-
 apt_packages: |
   - apt-transport-https
   - ca-certificates
   - curl
   - gnupg
   - lsb-release
+  - containerd
+
+kubernetes_stable_version_url: "https://cdn.dl.k8s.io/release/stable.txt"
 
 tmp_key_location: /tmp/{{ app_name }}.gpg
 key_location: /usr/share/keyrings/{{ app_name }}.gpg
@@ -16,3 +17,11 @@ key_location: /usr/share/keyrings/{{ app_name }}.gpg
 kubernetes_url: "https://pkgs.k8s.io/core:/stable:/{{ kubernetes_stable_version_var }}/deb"
 gpg_key_url: "{{ kubernetes_url }}/Release.key"
 apt_url: "deb [signed-by={{ key_location }}] {{ kubernetes_url }}/ /"
+
+kubens_version: "v0.9.5"
+kubectx_url: "https://github.com/ahmetb/kubectx/releases/download/{{ kubens_version }}"
+
+install_path: /usr/local/bin
+
+helm_version: "v3.16.3"
+helm_url: "https://get.helm.sh/helm-{{ helm_version }}-linux-amd64.tar.gz"

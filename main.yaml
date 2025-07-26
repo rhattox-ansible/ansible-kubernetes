@@ -6,5 +6,4 @@
     ansible_python_interpreter: /opt/ansible-venv/bin/python
   roles:
     - pre_install
-    - core_install
-    - post_install
+    # - core_install

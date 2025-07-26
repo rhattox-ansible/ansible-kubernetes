@@ -51,3 +51,11 @@
         kubectl apply -f {{ k8s_flannel_url }}
       args:
         executable: /bin/bash
+
+    - name: Remove control-plane taint from the current node
+      ansible.builtin.shell: |
+        kubectl taint nodes {{ ansible_hostname }} node-role.kubernetes.io/control-plane-
+      register: taint_result
+      changed_when: "'node-role.kubernetes.io/control-plane-' in taint_result.stdout or taint_result.stderr"
+      failed_when: taint_result.rc != 0
+      ignore_errors: true

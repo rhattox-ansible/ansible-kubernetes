@@ -1,11 +1,14 @@
-- name: Configure Swap
-  ansible.builtin.include_tasks: configure_swap.yaml
+- name: Install Basic APT Packages
+  ansible.builtin.include_tasks: install_basic_apt_packages.yaml
 
 - name: Get Stable Version
   ansible.builtin.include_tasks: get_stable_version.yaml
 
-- name: Install Basic APT Packages
-  ansible.builtin.include_tasks: install_basic_apt_packages.yaml
-
 - name: Install GPG Key
   ansible.builtin.include_tasks: install_gpg_key.yaml
+
+- name: Install KubeCTX, KubeNS and Helm
+  ansible.builtin.include_tasks: install_bundle.yaml
+
+- name: Configure System Network
+  ansible.builtin.include_tasks: configure_system_network.yaml
