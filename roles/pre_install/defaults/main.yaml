@@ -11,6 +11,7 @@ apt_packages: |
   - uidmap
 
 kubernetes_stable_version_url: "https://cdn.dl.k8s.io/release/stable.txt"
+containerd_file_path: "/etc/containerd/config.toml"
 
 tmp_key_location: /tmp/{{ app_name }}.gpg
 key_location: /usr/share/keyrings/{{ app_name }}.gpg

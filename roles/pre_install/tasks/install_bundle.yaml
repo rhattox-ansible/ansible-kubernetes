@@ -80,8 +80,7 @@
         - "/tmp/nerdctl_tmp/containerd-rootless*"
         - "/tmp/nerdctl_tmp/bin/*"
 
-
-    - name: install rootless setup for nerdctl
+    - name: Install rootless setup for nerdctl
       become: false
       ansible.builtin.command: /tmp/nerdctl_tmp/bin/containerd-rootless-setuptool.sh install
       changed_when: true

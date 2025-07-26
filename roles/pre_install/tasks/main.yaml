@@ -10,5 +10,8 @@
 - name: Install KubeCTX, KubeNS, Helm, nerdCTL
   ansible.builtin.include_tasks: install_bundle.yaml
 
+- name: Configure ContainerD
+  ansible.builtin.include_tasks: configure_containerd.yaml
+
 - name: Configure LocalHost
   ansible.builtin.include_tasks: configure_localhost.yaml

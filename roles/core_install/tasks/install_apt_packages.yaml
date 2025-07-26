@@ -17,8 +17,3 @@
         state: started
         enabled: true
 
-    - name: Start containerd service
-      ansible.builtin.service:
-        name: containerd
-        state: started
-        enabled: true
