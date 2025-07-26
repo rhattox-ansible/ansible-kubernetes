@@ -8,4 +8,3 @@ apt_packages: |
 
 kube_config_default_path: "/etc/kubernetes/admin.conf"
 user_config_default_path: "/home/{{ ansible_env.SUDO_USER }}/.kube/config"
-

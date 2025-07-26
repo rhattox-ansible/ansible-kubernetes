@@ -1,6 +1,7 @@
-- name: Install KubeCTX and KubeNS
+# Install KubeCTX, KubeNS, and Helm
+- name: Install KubeCTX and KubeNS Utilities
   block:
-    - name: Download kubectx
+    - name: Download kubectx Utility
       ansible.builtin.get_url:
         url: "{{ kubectx_url }}/kubectx"
         dest: "{{ install_path }}/kubectx"
@@ -8,7 +9,7 @@
         owner: "{{ ansible_env.SUDO_USER }}"
         group: "{{ ansible_env.SUDO_USER }}"
 
-    - name: Download kubens
+    - name: Download kubens Utility
       ansible.builtin.get_url:
         url: "{{ kubectx_url }}/kubens"
         dest: "{{ install_path }}/kubens"
@@ -16,26 +17,26 @@
         owner: "{{ ansible_env.SUDO_USER }}"
         group: "{{ ansible_env.SUDO_USER }}"
 
-- name: Install Helm
+- name: Install Helm Utility
   block:
-    - name: Create a temporary directory
+    - name: Create Temporary Directory for Helm
       ansible.builtin.file:
         path: "/tmp/helm_temp"
         state: directory
         mode: "0777"
 
-    - name: Download Helm
+    - name: Download Helm Archive
       ansible.builtin.get_url:
         url: "{{ helm_url }}"
         dest: "/tmp/helm_temp/helm.tar.gz"
         mode: "0777"
 
-    - name: Extract Helm
+    - name: Extract Helm Archive
       ansible.builtin.unarchive:
         src: "/tmp/helm_temp/helm.tar.gz"
         dest: "/tmp/helm_temp"
 
-    - name: Copy Helm Binary to bin directory
+    - name: Copy Helm Binary to Installation Directory
       ansible.builtin.copy:
         src: "/tmp/helm_temp/linux-amd64/helm"
         dest: "{{ install_path }}/helm"

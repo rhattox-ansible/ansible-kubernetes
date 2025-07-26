@@ -1,24 +1,25 @@
+# Configure ContainerD with SystemdCgroup Support
 - name: Configure ContainerD with SystemdCgroup Support
   block:
-    - name: "Check and prepare ContainerD configuration file"
+    - name: Check and Prepare ContainerD Configuration File
       block:
-        - name: "Check if ContainerD config file exists"
+        - name: Check if ContainerD Config File Exists
           ansible.builtin.stat:
             path: "{{ containerd_file_path }}"
           register: file_check
 
-        - name: "Remove existing ContainerD config file if present"
+        - name: Remove Existing ContainerD Config File if Present
           when: file_check.stat.exists
           ansible.builtin.file:
             path: "{{ containerd_file_path }}"
             state: absent
 
-    - name: "Verify ContainerD config file status"
+    - name: Verify ContainerD Config File Status
       ansible.builtin.stat:
         path: "{{ containerd_file_path }}"
       register: file_check
 
-    - name: Create ContainerD configuration directory
+    - name: Create ContainerD Configuration Directory
       ansible.builtin.file:
         path: "/etc/containerd"
         state: directory
@@ -26,7 +27,7 @@
         group: "{{ ansible_env.SUDO_USER }}"
         mode: "0750"
 
-    - name: Generate default ContainerD configuration file
+    - name: Generate Default ContainerD Configuration File
       register: generate_containerd
       changed_when: generate_containerd.rc != 0
       ansible.builtin.shell: |
@@ -34,7 +35,7 @@
       args:
         executable: /bin/bash
 
-    - name: Enable SystemdCgroup in ContainerD configuration
+    - name: Enable SystemdCgroup in ContainerD Configuration
       ansible.builtin.lineinfile:
         path: "{{ containerd_file_path }}"
         regexp: '^(\s*)SystemdCgroup = false'
@@ -43,7 +44,7 @@
       register: lineinfile_result
       changed_when: lineinfile_result.changed
 
-    - name: Restart and enable ContainerD service
+    - name: Restart and Enable ContainerD Service
       ansible.builtin.service:
         name: containerd
         state: restarted

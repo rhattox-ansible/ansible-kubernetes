@@ -1,10 +1,11 @@
-- name: Update Packages And Add Required Packages
+# Update and Install Basic APT Packages
+- name: Update APT Cache and Install Basic Packages
   block:
-    - name: Update APT package cache
+    - name: Update APT Package Cache
       ansible.builtin.apt:
         update_cache: true
 
-    - name: Install Prerequisites
+    - name: Install Basic Prerequisite Packages
       ansible.builtin.apt:
         name: "{{ apt_packages | from_yaml }}"
         state: present

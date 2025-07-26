@@ -1,19 +1,20 @@
-- name: Update Packages And Add Required Packages
+# Update and Install Required APT Packages, Manage Services
+- name: Update APT Cache and Install Required Packages
   block:
-    - name: Update APT package cache
+    - name: Update APT Package Cache
       ansible.builtin.apt:
         update_cache: true
 
-    - name: Install Prerequisites
+    - name: Install Prerequisite Packages
       ansible.builtin.apt:
         name: "{{ apt_packages | from_yaml }}"
         state: present
 
-- name: Manage Services
+  # Manage Kubernetes Services
+- name: Manage Kubernetes Services
   block:
-    - name: Start kubelet service
+    - name: Start and Enable kubelet Service
       ansible.builtin.service:
         name: kubelet
         state: started
         enabled: true
-

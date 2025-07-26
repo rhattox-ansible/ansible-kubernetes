@@ -1,6 +1,7 @@
-- name: Init K8s Kluster
+  # Initialize Kubernetes Cluster and Configure Networking
+- name: Initialize Kubernetes Cluster
   block:
-    - name: Initialize Kubernetes
+    - name: Run kubeadm init
       register: kubernetes_init
       changed_when: kubernetes_init.rc != 0
       ansible.builtin.shell: |
@@ -9,7 +10,7 @@
         executable: /bin/bash
       ignore_errors: true
 
-    - name: Create .kube Dir
+    - name: Create .kube Directory for User
       ansible.builtin.file:
         path: "/home/{{ ansible_env.SUDO_USER }}/.kube/"
         state: directory
@@ -17,7 +18,7 @@
         group: "{{ ansible_env.SUDO_USER }}"
         mode: "0750"
 
-    - name: Copy kubeconfig to user's home directory
+    - name: Copy Kubeconfig to User Home Directory
       ansible.builtin.copy:
         src: "{{ kube_config_default_path }}"
         dest: "{{ user_config_default_path }}"
@@ -26,7 +27,7 @@
         group: "{{ ansible_env.SUDO_USER }}"
         mode: "0750"
 
-    - name: Create .kube Dir for ROOT
+    - name: Create .kube Directory for Root
       ansible.builtin.file:
         path: "/root/.kube/"
         state: directory
@@ -34,7 +35,7 @@
         group: "root"
         mode: "0750"
 
-    - name: Copy kubeconfig to root's home directory
+    - name: Copy Kubeconfig to Root Home Directory
       ansible.builtin.copy:
         src: "{{ kube_config_default_path }}"
         dest: "/root/.kube/config"
@@ -43,7 +44,7 @@
         group: "root"
         mode: "0750"
 
-    - name: Install Flannel as the pod network add-on
+    - name: Install Flannel Pod Network Add-on
       register: kubernetwork
       become: false
       changed_when: kubernetwork.rc != 0
@@ -52,7 +53,7 @@
       args:
         executable: /bin/bash
 
-    - name: Remove control-plane taint from the current node
+    - name: Remove Control-Plane Taint from Current Node
       ansible.builtin.shell: |
         kubectl taint nodes {{ ansible_hostname }} node-role.kubernetes.io/control-plane-
       register: taint_result

@@ -1,5 +1,5 @@
-- name: Install Apt Packages
+- name: Install Required APT Packages
   ansible.builtin.include_tasks: install_apt_packages.yaml
 
-- name: Init Cluster
+- name: Initialize Kubernetes Cluster
   ansible.builtin.include_tasks: init_cluster.yaml

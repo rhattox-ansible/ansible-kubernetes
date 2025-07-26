@@ -1,29 +1,32 @@
-- name: Check if the GPG Key exists
+# Manage GPG Key for APT Repository
+- name: Check if GPG Key Exists
   ansible.builtin.stat:
     path: "{{ key_location }}"
   register: file_check
 
-- name: Remove GPG file
+  # Remove GPG Key File if Present
+- name: Remove GPG Key File if Present
   when: file_check.stat.exists
   ansible.builtin.file:
     path: "{{ key_location }}"
     state: absent
 
-- name: Check if the GPG Key exists
+- name: Check if GPG Key Exists (Recheck)
   ansible.builtin.stat:
     path: "{{ key_location }}"
   register: file_check
 
-- name: Download And Install GPG Key
+  # Download and Install GPG Key
+- name: Download and Install GPG Key
   block:
-    - name: Download GPG Key
+    - name: Download GPG Key File
       when: not file_check.stat.exists
       ansible.builtin.get_url:
         url: "{{ gpg_key_url }}"
         dest: "{{ tmp_key_location }}"
         mode: "0644"
 
-    - name: Install GPG Key
+    - name: Install GPG Key to System
       changed_when: false
       when: not file_check.stat.exists
       ansible.builtin.shell: |
@@ -31,18 +34,18 @@
       args:
         executable: /bin/bash
 
-    - name: Remove tmp file
+    - name: Remove Temporary GPG Key File
       when: not file_check.stat.exists
       ansible.builtin.file:
         path: "{{ tmp_key_location }}"
         state: absent
 
-    - name: Update APT package cache
+    - name: Update APT Package Cache After GPG Key Install
       when: not file_check.stat.exists
       ansible.builtin.apt:
         update_cache: true
 
-    - name: Install APT repository
+    - name: Add APT Repository
       when: not file_check.stat.exists
       ansible.builtin.apt_repository:
         repo: "{{ apt_url }}"
