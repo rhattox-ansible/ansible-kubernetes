@@ -18,6 +18,14 @@
         path: "{{ containerd_file_path }}"
       register: file_check
 
+    - name: Create /etc/containerd Dir
+      ansible.builtin.file:
+        path: "/etc/containerd"
+        state: directory
+        owner: "{{ ansible_env.SUDO_USER }}"
+        group: "{{ ansible_env.SUDO_USER }}"
+        mode: "0750"
+
     - name: Generate ContainerD file
       register: generate_containerd
       changed_when: generate_containerd.rc != 0
@@ -30,7 +38,7 @@
       ansible.builtin.lineinfile:
         path: "{{ containerd_file_path }}"
         regexp: '^(\s*)SystemdCgroup = false'
-        line: 'SystemdCgroup = true'
+        line: "SystemdCgroup = true"
         backup: true
       register: lineinfile_result
       changed_when: lineinfile_result.changed

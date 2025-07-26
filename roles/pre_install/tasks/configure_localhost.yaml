@@ -1,63 +1,20 @@
-- name: Configure Swap
+- name: Configure kernel modules and sysctl for Kubernetes
   block:
-    - name: Disable swap for current session
-      register: disable_swap
-      changed_when: disable_swap.rc != 0
-      ansible.builtin.shell: |
-        swapoff -a
-      args:
-        executable: /bin/bash
-      ignore_errors: true
-
-    - name: Disable swap permanently, persist reboots
-      ansible.builtin.replace:
-        path: /etc/fstab
-        regexp: '^(\s*)([^#\n]+\s+)(\w+\s+)swap(\s+.*)$'
-        replace: '#\1\2\3swap\4'
-        backup: true
-
-- name: Configure ModProbe
-  block:
-    - name: Load br_netfilter module
+    - name: Ensure br_netfilter module is loaded
       community.general.modprobe:
         name: br_netfilter
         state: present
 
-    - name: Ensure sysctl settings for br_netfilter are configured
-      ansible.posix.sysctl:
-        name: "{{ item.key }}"
-        value: "{{ item.value }}"
-        state: present
-        reload: true
-      loop:
-        - { key: "net.bridge.bridge-nf-call-iptables", value: "1" }
-        - { key: "net.bridge.bridge-nf-call-ip6tables", value: "1" }
-
-    - name: Apply sysctl changes
-      ansible.posix.sysctl:
-        name: "{{ item.key }}"
-        value: "{{ item.value }}"
-        state: present
-      loop:
-        - { key: "net.bridge.bridge-nf-call-iptables", value: "1" }
-        - { key: "net.bridge.bridge-nf-call-ip6tables", value: "1" }
-
-- name: Configure networking
-  block:
-    - name: Load br_netfilter kernel module
-      community.general.modprobe:
-        name: br_netfilter
-        state: present
-
-    - name: Ensure br_netfilter module is loaded on boot
-      ansible.builtin.copy:
-        dest: /etc/modules-load.d/br_netfilter.conf
-        content: "br_netfilter\n"
+    - name: Ensure br_netfilter loads on boot
+      ansible.builtin.lineinfile:
+        path: /etc/modules-load.d/br_netfilter.conf
+        line: br_netfilter
+        create: true
         owner: root
         group: root
         mode: "0644"
 
-    - name: Configure Kubernetes networking sysctl parameters
+    - name: Write Kubernetes sysctl parameters
       ansible.builtin.copy:
         dest: /etc/sysctl.d/99-kubernetes-cri.conf
         content: |
