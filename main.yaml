@@ -7,5 +7,5 @@
     - defaults/main.yaml
 
   tasks:
-    - name: Run the nerdctl installation workflow
+    - name: Run the kubernetes installation workflow
       ansible.builtin.include_tasks: "tasks/main.yaml"

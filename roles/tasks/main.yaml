@@ -1,3 +1,10 @@
+- name: Starting kubernetes installation
+  ansible.builtin.debug:
+    msg:
+      - "=================================================="
+      - "Starting kubernetes installation..."
+      - "=================================================="
+
 - name: Install the base Debian packages required for Kubernetes
   ansible.builtin.include_tasks: 0-install_basic_apt_packages.yaml
 
@@ -15,3 +22,10 @@
 
 - name: Initialize the cluster and configure the pod network
   ansible.builtin.include_tasks: 5-init_cluster.yaml
+
+- name: Kubernetes installation completed successfully
+  ansible.builtin.debug:
+    msg:
+      - "=================================================="
+      - "kubernetes installation completed successfully."
+      - "=================================================="
