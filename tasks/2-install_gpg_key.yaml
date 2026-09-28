@@ -55,7 +55,7 @@
 
 - name: Install the base system packages required for Kubernetes setup
   ansible.builtin.apt:
-    name: |
+    name:
       - kubectl
       - kubelet
       - kubeadm
