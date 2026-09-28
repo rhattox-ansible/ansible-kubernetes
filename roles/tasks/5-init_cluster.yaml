@@ -1,0 +1,65 @@
+- name: Start and enable the kubelet service so Kubernetes can initialize the node
+  ansible.builtin.service:
+    name: kubelet
+    state: started
+    enabled: true
+
+- name: Initialize the Kubernetes control plane with kubeadm using the configured pod CIDR
+  register: kubernetes_init
+  changed_when: kubernetes_init.rc != 0
+  ansible.builtin.shell: |
+    kubeadm init --pod-network-cidr={{ k8s_pod_cidr }}
+  args:
+    executable: /bin/bash
+  ignore_errors: true
+
+- name: Create the Kubernetes config directory for the invoking user
+  ansible.builtin.file:
+    path: "/home/{{ ansible_env.SUDO_USER }}/.kube/"
+    state: directory
+    owner: "{{ ansible_env.SUDO_USER }}"
+    group: "{{ ansible_env.SUDO_USER }}"
+    mode: "0750"
+
+- name: Copy the cluster kubeconfig into the invoking user's home directory
+  ansible.builtin.copy:
+    src: "{{ kube_config_default_path }}"
+    dest: "{{ user_config_default_path }}"
+    remote_src: true
+    owner: "{{ ansible_env.SUDO_USER }}"
+    group: "{{ ansible_env.SUDO_USER }}"
+    mode: "0750"
+
+- name: Create the Kubernetes config directory for the root account
+  ansible.builtin.file:
+    path: "/root/.kube/"
+    state: directory
+    owner: "root"
+    group: "root"
+    mode: "0750"
+
+- name: Copy the cluster kubeconfig into the root user's kube config directory
+  ansible.builtin.copy:
+    src: "{{ kube_config_default_path }}"
+    dest: "/root/.kube/config"
+    remote_src: true
+    owner: "root"
+    group: "root"
+    mode: "0750"
+
+- name: Install the Flannel pod network add-on for the cluster
+  register: kubernetwork
+  become: false
+  changed_when: kubernetwork.rc != 0
+  ansible.builtin.shell: |
+    kubectl apply -f {{ k8s_flannel_url }}
+  args:
+    executable: /bin/bash
+
+- name: Remove the control-plane taint from the current node so it can schedule workloads
+  ansible.builtin.shell: |
+    kubectl taint nodes {{ ansible_hostname }} node-role.kubernetes.io/control-plane-
+  register: taint_result
+  changed_when: "'node-role.kubernetes.io/control-plane-' in taint_result.stdout or taint_result.stderr"
+  failed_when: taint_result.rc != 0
+  ignore_errors: true

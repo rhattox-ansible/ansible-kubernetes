@@ -1,0 +1,13 @@
+- name: Fetch the current Kubernetes stable release version from the upstream URL
+  ansible.builtin.uri:
+    url: "{{ kubernetes_stable_version_url }}"
+    return_content: true
+  register: kubernetes_stable_version
+
+- name: Parse the stable version and store it as a reusable Ansible fact
+  ansible.builtin.set_fact:
+    kubernetes_stable_version_var: "{{ kubernetes_stable_version.content | regex_replace('\\.\\d+$', '') | trim }}"
+
+- name: Display the resolved Kubernetes stable version
+  ansible.builtin.debug:
+    msg: "The stable release is: {{ kubernetes_stable_version_var }}"

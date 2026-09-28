@@ -1,0 +1,17 @@
+- name: Install the base Debian packages required for Kubernetes
+  ansible.builtin.include_tasks: 0-install_basic_apt_packages.yaml
+
+- name: Resolve the current upstream stable Kubernetes version
+  ansible.builtin.include_tasks: 1-get_stable_version.yaml
+
+- name: Install the Kubernetes repository GPG key and enable the APT source
+  ansible.builtin.include_tasks: 2-install_gpg_key.yaml
+
+- name: Configure host networking and kernel parameters for Kubernetes
+  ansible.builtin.include_tasks: 3-configure_localhost.yaml
+
+- name: Install the Kubernetes and cluster utility binaries
+  ansible.builtin.include_tasks: 4-install_bundle.yaml
+
+- name: Initialize the cluster and configure the pod network
+  ansible.builtin.include_tasks: 5-init_cluster.yaml

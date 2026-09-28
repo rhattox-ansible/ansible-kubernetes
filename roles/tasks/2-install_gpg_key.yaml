@@ -1,0 +1,50 @@
+# Manage the GPG key used to authenticate the Kubernetes APT repository
+- name: Check whether the Kubernetes repository GPG key is already installed
+  ansible.builtin.stat:
+    path: "{{ key_location }}"
+  register: file_check
+
+- name: Remove any stale Kubernetes GPG key file before reinstalling it
+  when: file_check.stat.exists
+  ansible.builtin.file:
+    path: "{{ key_location }}"
+    state: absent
+
+- name: Re-check whether the Kubernetes repository GPG key is present
+  ansible.builtin.stat:
+    path: "{{ key_location }}"
+  register: file_check
+
+- name: Download the Kubernetes repository GPG key to a temporary location
+  when: not file_check.stat.exists
+  ansible.builtin.get_url:
+    url: "{{ gpg_key_url }}"
+    dest: "{{ tmp_key_location }}"
+    mode: "0644"
+
+- name: Install the Kubernetes repository GPG key into the system keyring
+  changed_when: false
+  when: not file_check.stat.exists
+  ansible.builtin.shell: |
+    set -o pipefail
+    cat {{ tmp_key_location }} | gpg --batch --yes --dearmor --quiet -o {{ key_location }}
+  args:
+    executable: /bin/bash
+
+- name: Remove the temporary Kubernetes repository GPG key file
+  when: not file_check.stat.exists
+  ansible.builtin.file:
+    path: "{{ tmp_key_location }}"
+    state: absent
+
+- name: Refresh APT metadata after adding the Kubernetes repository key
+  when: not file_check.stat.exists
+  ansible.builtin.apt:
+    update_cache: true
+
+- name: Add the Kubernetes APT repository to the system sources list
+  when: not file_check.stat.exists
+  ansible.builtin.apt_repository:
+    repo: "{{ apt_url }}"
+    state: present
+    filename: "{{ app_name }}"

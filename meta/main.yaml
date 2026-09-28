@@ -1,0 +1,28 @@
+galaxy_info:
+  role_name: kubernetes
+  author: rhattox
+  description: Install and configure a Debian-based Kubernetes cluster with kubeadm, containerd, and Flannel.
+  company: ""
+  license: MIT
+  min_ansible_version: "2.9"
+  platforms:
+    - name: Debian
+      versions:
+        - bullseye
+        - bookworm
+    - name: Ubuntu
+      versions:
+        - focal
+        - jammy
+        - noble
+  galaxy_tags:
+    - kubernetes
+    - k8s
+    - kubeadm
+    - containerd
+    - flannel
+    - linux
+    - debian
+    - networking
+
+dependencies: []
