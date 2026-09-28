@@ -48,3 +48,15 @@
     repo: "{{ apt_url }}"
     state: present
     filename: "{{ app_name }}"
+
+- name: Refresh the APT package index and install required base packages
+  ansible.builtin.apt:
+    update_cache: true
+
+- name: Install the base system packages required for Kubernetes setup
+  ansible.builtin.apt:
+    name: |
+      - kubectl
+      - kubelet
+      - kubeadm
+    state: present

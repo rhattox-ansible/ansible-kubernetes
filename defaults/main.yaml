@@ -1,15 +1,5 @@
 app_name: kubernetes
 
-apt_packages: |
-  - apt-transport-https
-  - ca-certificates
-  - curl
-  - gnupg
-  - lsb-release
-  - kubectl
-  - kubelet
-  - kubeadm
-
 kubernetes_stable_version_url: "https://cdn.dl.k8s.io/release/stable.txt"
 containerd_file_path: "/etc/containerd/config.toml"
 
