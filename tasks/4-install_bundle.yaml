@@ -7,7 +7,7 @@
 - name: Download the kubectx utility into the local bin directory
   ansible.builtin.get_url:
     url: "{{ kubectx_url }}"
-    dest: "{{ install_path }}/kubectx.tar.gz"
+    dest: "/tmp/kubectx/kubectx.tar.gz"
     mode: "0550"
     owner: "{{ ansible_env.SUDO_USER }}"
     group: "{{ ansible_env.SUDO_USER }}"
@@ -26,7 +26,7 @@
 - name: Download the kubens utility into the local bin directory
   ansible.builtin.get_url:
     url: "{{ kubens_url }}"
-    dest: "{{ install_path }}/kubens.tar.gz"
+    dest: "/tmp/kubens/kubens.tar.gz"
     mode: "0550"
     owner: "{{ ansible_env.SUDO_USER }}"
     group: "{{ ansible_env.SUDO_USER }}"
