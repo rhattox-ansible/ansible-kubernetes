@@ -1,6 +1,6 @@
 app_name: kubernetes
 
-kubernetes_stable_version_url: "https://cdn.dl.k8s.io/release/stable.txt"
+kubernetes_stable_version_url: "https://dl.k8s.io/release/stable.txt"
 containerd_file_path: "/etc/containerd/config.toml"
 
 tmp_key_location: /tmp/{{ app_name }}.gpg
