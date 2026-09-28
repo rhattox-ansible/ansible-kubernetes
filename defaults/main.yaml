@@ -16,3 +16,6 @@ k8s_flannel_url: https://github.com/flannel-io/flannel/releases/latest/download/
 
 kube_config_default_path: "/etc/kubernetes/admin.conf"
 user_config_default_path: "/home/{{ ansible_env.SUDO_USER }}/.kube/config"
+
+kubectx_url: "https://github.com/ahmetb/kubectx/releases/download/v0.11.0/kubectx_v0.11.0_linux_x86_64.tar.gz"
+kubens_url: "https://github.com/ahmetb/kubectx/releases/download/v0.11.0/kubens_v0.11.0_linux_x86_64.tar.gz"
