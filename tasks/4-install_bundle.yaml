@@ -1,3 +1,9 @@
+- name: Create a temporary working directory for the kubectx installation archive
+  ansible.builtin.file:
+    path: "/tmp/kubectx"
+    state: directory
+    mode: "0777"
+
 - name: Download the kubectx utility into the local bin directory
   ansible.builtin.get_url:
     url: "{{ kubectx_url }}"
@@ -6,16 +12,16 @@
     owner: "{{ ansible_env.SUDO_USER }}"
     group: "{{ ansible_env.SUDO_USER }}"
 
-- name: Create a temporary working directory for the kubectx installation archive
-  ansible.builtin.file:
-    path: "/tmp/kubectx"
-    state: directory
-    mode: "0777"
-
 - name: Extract the kubectx archive contents locally
   ansible.builtin.unarchive:
     src: "/tmp/kubectx/kubectx.tar.gz"
     dest: "/tmp/kubectx"
+
+- name: Create a temporary working directory for the kubens installation archive
+  ansible.builtin.file:
+    path: "/tmp/kubens"
+    state: directory
+    mode: "0777"
 
 - name: Download the kubens utility into the local bin directory
   ansible.builtin.get_url:
@@ -24,12 +30,6 @@
     mode: "0550"
     owner: "{{ ansible_env.SUDO_USER }}"
     group: "{{ ansible_env.SUDO_USER }}"
-
-- name: Create a temporary working directory for the kubens installation archive
-  ansible.builtin.file:
-    path: "/tmp/kubens"
-    state: directory
-    mode: "0777"
 
 - name: Extract the kubens archive contents locally
   ansible.builtin.unarchive:
