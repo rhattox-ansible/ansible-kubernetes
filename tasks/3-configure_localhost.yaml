@@ -1,3 +1,13 @@
+- name: Disable active swap for Kubernetes
+  ansible.builtin.command: swapoff --all
+  changed_when: false
+
+- name: Disable swap entries in fstab so swap stays off after reboot
+  ansible.builtin.replace:
+    path: /etc/fstab
+    regexp: '^(\s*)(\S+\s+\S+\s+swap\s+.*)$'
+    replace: '\1# \2'
+
 - name: Load the br_netfilter kernel module required for Kubernetes networking
   community.general.modprobe:
     name: br_netfilter
