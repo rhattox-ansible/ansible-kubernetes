@@ -19,3 +19,5 @@ user_config_default_path: "/home/{{ ansible_env.SUDO_USER }}/.kube/config"
 
 kubectx_url: "https://github.com/ahmetb/kubectx/releases/download/v0.11.0/kubectx_v0.11.0_linux_x86_64.tar.gz"
 kubens_url: "https://github.com/ahmetb/kubectx/releases/download/v0.11.0/kubens_v0.11.0_linux_x86_64.tar.gz"
+helm_url: "https://get.helm.sh/helm-v4.3.0-linux-amd64.tar.gz"
+install_path: /usr/bin

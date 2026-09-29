@@ -16,6 +16,21 @@
   ansible.builtin.unarchive:
     src: "/tmp/kubectx/kubectx.tar.gz"
     dest: "/tmp/kubectx"
+    remote_src: true
+
+- name: Copy the kubectx binary into the installation directory for use on the system
+  ansible.builtin.copy:
+    src: "/tmp/kubectx/kubectx"
+    dest: "{{ install_path }}/kubectx"
+    remote_src: true
+    owner: "{{ ansible_env.SUDO_USER }}"
+    group: "{{ ansible_env.SUDO_USER }}"
+    mode: "0550"
+
+- name: Remove the temporary Helm extraction directory after installation
+  ansible.builtin.file:
+    path: "/tmp/kubectx"
+    state: absent
 
 - name: Create a temporary working directory for the kubens installation archive
   ansible.builtin.file:
@@ -35,6 +50,21 @@
   ansible.builtin.unarchive:
     src: "/tmp/kubens/kubens.tar.gz"
     dest: "/tmp/kubens"
+    remote_src: true
+
+- name: Copy the kubens binary into the installation directory for use on the system
+  ansible.builtin.copy:
+    src: "/tmp/kubens/kubens"
+    dest: "{{ install_path }}/kubens"
+    remote_src: true
+    owner: "{{ ansible_env.SUDO_USER }}"
+    group: "{{ ansible_env.SUDO_USER }}"
+    mode: "0550"
+
+- name: Remove the temporary Helm extraction directory after installation
+  ansible.builtin.file:
+    path: "/tmp/kubens"
+    state: absent
 
 - name: Create a temporary working directory for the Helm installation archive
   ansible.builtin.file:
@@ -52,6 +82,7 @@
   ansible.builtin.unarchive:
     src: "/tmp/helm_temp/helm.tar.gz"
     dest: "/tmp/helm_temp"
+    remote_src: true
 
 - name: Copy the Helm binary into the installation directory for use on the system
   ansible.builtin.copy:
