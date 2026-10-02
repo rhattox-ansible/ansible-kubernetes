@@ -17,11 +17,8 @@
 - name: Configure host networking and kernel parameters for Kubernetes
   ansible.builtin.include_tasks: 3-configure_localhost.yaml
 
-- name: Install the Kubernetes and cluster utility binaries
-  ansible.builtin.include_tasks: 4-install_bundle.yaml
-
 - name: Initialize the cluster and configure the pod network
-  ansible.builtin.include_tasks: 5-init_cluster.yaml
+  ansible.builtin.include_tasks: 4-init_cluster.yaml
 
 - name: Kubernetes installation completed successfully
   ansible.builtin.debug:
